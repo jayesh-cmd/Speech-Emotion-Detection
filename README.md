@@ -8,4 +8,6 @@
     -  Librosa (Audio Processing)
     -  NumPy, Pandas
     -  Scikit-learn
-    - Encoder
+    -  Encoder
+    -  Model Used -> Random Forest Classifier
+    -  Accuracy Score -> 0.95

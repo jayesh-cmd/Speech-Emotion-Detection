@@ -4,14 +4,18 @@ import pandas as pd
 import os
 import numpy as np
 import librosa
+from sklearn.ensemble import RandomForestClassifier
+import xgboost
+from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder , StandardScaler
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report
 import joblib
+from sklearn.metrics import accuracy_score
 
 # FOLDER PATH OF DATASET
-dataset_path = "AI ML LEARN\emotion.py\RAVDESS"
+dataset_path = "AI ML LEARN\Emotion Det. Project"
 
 # MAPING EMOTIONS
 emotion_map = {
@@ -52,6 +56,8 @@ def load_files(dataset_path):
 
     return np.array(feature) , np.array(label)
 X, y = load_files(dataset_path)
+if len(X) == 0:
+    raise ValueError("No audio files found! Check dataset_path.")
 
 # ENCODING LABELS USING LABEL ENCODER
 encoder = LabelEncoder()
@@ -65,7 +71,7 @@ x_scaled = scaler.fit_transform(X)
 X_train , X_test , y_train , y_test = train_test_split(x_scaled , y_encoded , test_size=0.2 , random_state=42)
 
 # FITTING DATA ON MODEL
-model = SVC(kernel='rbf' , C=10 , gamma=0.01 , random_state=42)
+model = RandomForestClassifier()
 model.fit(X_train , y_train)
 
 y_pred = model.predict(X_test)
@@ -75,6 +81,8 @@ print(classification_report(y_test , y_pred , target_names=encoder.classes_))
 joblib.dump(model , 'emotion_model.pkl')
 joblib.dump(encoder , 'encoder.pkl')
 joblib.dump(scaler , 'scaler.pkl')
+
+print(accuracy_score(y_pred , y_test))
 
 def final_predict(audio_path):
     # LOADING MODEL
@@ -90,7 +98,7 @@ def final_predict(audio_path):
     prediction = model.predict(scaler_feature)
     return encoder.inverse_transform(prediction)[0]
 
-audio_path = r"AI ML LEARN\emotion.py\03-01-07-01-02-02-02.wav"
+audio_path = r"C:\Users\Lenovo\OneDrive\Desktop\Harry Python\AI ML LEARN\Emotion Det. Project\03-01-07-01-02-02-02.wav"
 # audio_path = input("Enter The Path Of Audio : ")
 
 if not os.path.exists(audio_path):
