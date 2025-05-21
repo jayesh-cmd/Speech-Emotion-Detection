@@ -10,4 +10,4 @@
     -  Scikit-learn
     -  Encoder
     -  Model Used -> Random Forest Classifier
-    -  Accuracy Score -> 0.95
+    -  Accuracy Score -> 95%
